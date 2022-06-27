@@ -48,8 +48,6 @@ namespace AISomniumFiles2Mod
                 // Set mouse cursor to invisible. Why is this not default?
                 Cursor.visible = false;
                 MelonLogger.Msg("Set cursor to invisible.");
-
-                QualitySettings.SetQualityLevel(5);
             }
         }
 
