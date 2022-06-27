@@ -23,9 +23,8 @@ namespace AISomniumFiles2Mod
             Fixes.SetFilePath("Mods/AISomnium2Fix.cfg");
             DesiredResolutionX = Fixes.CreateEntry("Resolution_Width", Display.main.systemWidth, "", "Custom resolution width"); // Set default to something safe
             DesiredResolutionY = Fixes.CreateEntry("Resolution_Height", Display.main.systemHeight, "", "Custom resolution height"); // Set default to something safe
-            Fullscreen = Fixes.CreateEntry("Fullscreen", true, "", "Set to true for borderless fullscreen or false for windowed");
+            Fullscreen = Fixes.CreateEntry("Fullscreen", true, "", "Set to true for fullscreen or false for windowed");
             UIFix = Fixes.CreateEntry("UI_Fixes", true, "", "Fixes UI issues at ultrawide/wider");
-
         }
 
         [HarmonyPatch]
@@ -49,18 +48,22 @@ namespace AISomniumFiles2Mod
                 // Set mouse cursor to invisible. Why is this not default?
                 Cursor.visible = false;
                 MelonLogger.Msg("Set cursor to invisible.");
+
+                QualitySettings.SetQualityLevel(5);
             }
         }
 
         [HarmonyPatch]
         public class UIFixes
         {
+            public static float NewAspectRatio = (float)DesiredResolutionX.Value / DesiredResolutionY.Value;
+
             // Set screen match mode when object has CanvasScaler enabled
             [HarmonyPatch(typeof(CanvasScaler), "OnEnable")]
             [HarmonyPostfix]
             public static void SetScreenMatchMode(CanvasScaler __instance)
             {
-                if (UIFix.Value)
+                if (NewAspectRatio > 1.8 && UIFix.Value)
                 {
                     __instance.m_ScreenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
                 }  
@@ -71,12 +74,12 @@ namespace AISomniumFiles2Mod
             [HarmonyPostfix]
             public static void LetterboxFix(Game.CinemaScope __instance)
             {
-                if (UIFix.Value)
+                if (NewAspectRatio > 1.8 && UIFix.Value)
                 {
                     var GameObjects = GameObject.FindObjectsOfType<Game.CinemaScope>();
                     foreach (var GameObject in GameObjects)
                     {
-                        float NewAspectRatio = (float)Screen.width / (float)Screen.height;
+                        
                         GameObject.transform.localScale = new Vector3(1 * NewAspectRatio, 1f, 1f);
                     }
                     MelonLogger.Msg("Letterboxing spanned.");
