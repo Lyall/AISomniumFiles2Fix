@@ -19,7 +19,7 @@ This MelonLoader mod for the game **AI: THE SOMNIUM FILES - nirvanA Initiative**
 Please report any issues you see and I'll do my best to fix them.
 
 ## Screenshots
-
+![ezgif-1-6f5c0d1dc5](https://user-images.githubusercontent.com/695941/175845251-b68e6009-2ce9-45d3-97b1-78f8f462ce42.gif)
 
 ## Credits
 - [MelonLoader](https://github.com/LavaGang/MelonLoader) is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/LavaGang/MelonLoader/blob/master/LICENSE.md) for the full License.
