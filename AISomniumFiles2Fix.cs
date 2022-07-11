@@ -14,6 +14,7 @@ namespace AISomniumFiles2Mod
         public static MelonPreferences_Entry<int> DesiredResolutionY;
         public static MelonPreferences_Entry<bool> Fullscreen;
         public static MelonPreferences_Entry<bool> UIFix;
+        public static MelonPreferences_Entry<bool> IncreaseQuality;
 
         public override void OnApplicationStart()
         {
@@ -25,6 +26,7 @@ namespace AISomniumFiles2Mod
             DesiredResolutionY = Fixes.CreateEntry("Resolution_Height", Display.main.systemHeight, "", "Custom resolution height"); // Set default to something safe
             Fullscreen = Fixes.CreateEntry("Fullscreen", true, "", "Set to true for fullscreen or false for windowed");
             UIFix = Fixes.CreateEntry("UI_Fixes", true, "", "Fixes UI issues at ultrawide/wider");
+            IncreaseQuality = Fixes.CreateEntry("IncreaseQuality", false, "", "Increase graphical quality."); // Disable by default as it will impact performance
         }
 
         [HarmonyPatch]
@@ -133,6 +135,24 @@ namespace AISomniumFiles2Mod
                     //MelonLogger.Msg("EyeFade filter spanned.");
                 }
             }
-        }        
+        }
+
+        [HarmonyPatch]
+        public class QualityPatches
+        {
+            // Enable high-quality SMAA for all cameras
+            [HarmonyPatch(typeof(Game.CameraController), "OnEnable")]
+            [HarmonyPostfix]
+            public static void CameraQualityFix(Game.CameraController __instance)
+            {
+                if (IncreaseQuality.Value)
+                {
+                    var UACD = __instance._camera.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();
+                    UACD.antialiasing = UnityEngine.Rendering.Universal.AntialiasingMode.SubpixelMorphologicalAntiAliasing;
+                    UACD.antialiasingQuality = UnityEngine.Rendering.Universal.AntialiasingQuality.High;
+                    MelonLogger.Msg("Camera set to SMAA High.");
+                }
+            }
+        }
     }
 }
