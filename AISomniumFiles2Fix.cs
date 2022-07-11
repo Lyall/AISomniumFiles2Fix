@@ -26,7 +26,7 @@ namespace AISomniumFiles2Mod
             DesiredResolutionY = Fixes.CreateEntry("Resolution_Height", Display.main.systemHeight, "", "Custom resolution height"); // Set default to something safe
             Fullscreen = Fixes.CreateEntry("Fullscreen", true, "", "Set to true for fullscreen or false for windowed");
             UIFix = Fixes.CreateEntry("UI_Fixes", true, "", "Fixes UI issues at ultrawide/wider");
-            IncreaseQuality = Fixes.CreateEntry("IncreaseQuality", false, "", "Increase graphical quality."); // Disable by default as it will impact performance
+            IncreaseQuality = Fixes.CreateEntry("IncreaseQuality", true, "", "Increase graphical quality."); // 
         }
 
         [HarmonyPatch]
