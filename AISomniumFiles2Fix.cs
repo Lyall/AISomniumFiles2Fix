@@ -3,7 +3,7 @@ using HarmonyLib;
 using UnityEngine;
 using UnityEngine.UI;
 
-[assembly: MelonInfo(typeof(AISomniumFiles2Mod.AISomniumFiles2Fix), "AI: Somnium Files 2", "1.0.0", "Lyall")]
+[assembly: MelonInfo(typeof(AISomniumFiles2Mod.AISomniumFiles2Fix), "AI: Somnium Files 2", "1.0.1", "Lyall")]
 [assembly: MelonGame("SpikeChunsoft", "AI_TheSomniumFiles2")]
 namespace AISomniumFiles2Mod
 {
@@ -48,13 +48,16 @@ namespace AISomniumFiles2Mod
                 // Set mouse cursor to invisible. Why is this not default?
                 Cursor.visible = false;
                 MelonLogger.Msg("Set cursor to invisible.");
+                
             }
         }
 
         [HarmonyPatch]
         public class UIFixes
         {
+            public static float NativeAspectRatio = (float)16 / 9;
             public static float NewAspectRatio = (float)DesiredResolutionX.Value / DesiredResolutionY.Value;
+            public static float AspectMultiplier = NewAspectRatio / NativeAspectRatio;
 
             // Set screen match mode when object has CanvasScaler enabled
             [HarmonyPatch(typeof(CanvasScaler), "OnEnable")]
@@ -70,7 +73,7 @@ namespace AISomniumFiles2Mod
             // Fix letterboxing to span screen
             [HarmonyPatch(typeof(Game.CinemaScope), "Show")]
             [HarmonyPostfix]
-            public static void LetterboxFix(Game.CinemaScope __instance)
+            public static void LetterboxFix()
             {
                 if (NewAspectRatio > 1.8 && UIFix.Value)
                 {
@@ -78,9 +81,56 @@ namespace AISomniumFiles2Mod
                     foreach (var GameObject in GameObjects)
                     {
                         
-                        GameObject.transform.localScale = new Vector3(1 * NewAspectRatio, 1f, 1f);
+                        GameObject.transform.localScale = new Vector3(1 * AspectMultiplier, 1f, 1f);
                     }
                     MelonLogger.Msg("Letterboxing spanned.");
+                }
+            }
+
+            // Fix filters to span screen
+            // This is jank but I can't think of a better solution right now.
+            [HarmonyPatch(typeof(Game.FilterController), "Black")]
+            [HarmonyPatch(typeof(Game.FilterController), "FadeIn")]
+            [HarmonyPatch(typeof(Game.FilterController), "FadeInWait")]
+            [HarmonyPatch(typeof(Game.FilterController), "FadeOut")]
+            [HarmonyPatch(typeof(Game.FilterController), "FadeOutWait")]
+            [HarmonyPatch(typeof(Game.FilterController), "Flash")]
+            [HarmonyPatch(typeof(Game.FilterController), "Set")]
+            [HarmonyPatch(typeof(Game.FilterController), "SetValue")]
+            [HarmonyPostfix]
+            public static void FilterFix()
+            {
+                if (NewAspectRatio > 1.8 && UIFix.Value)
+                {
+                    var GameObjects = GameObject.FindObjectsOfType<Game.FilterController>();
+                    foreach (var GameObject in GameObjects)
+                    {
+
+                        GameObject.transform.localScale = new Vector3(1 * AspectMultiplier, 1f, 1f);
+                    }
+                    // Log spam
+                    //MelonLogger.Msg("Filter spanned.");
+                }
+            }
+
+            // Fix eye fade filter
+            [HarmonyPatch(typeof(Game.EyeFadeFilter), "FadeIn")]
+            [HarmonyPatch(typeof(Game.EyeFadeFilter), "FadeInWait")]
+            [HarmonyPatch(typeof(Game.EyeFadeFilter), "FadeOut")]
+            [HarmonyPatch(typeof(Game.EyeFadeFilter), "FadeOutWait")]
+            [HarmonyPostfix]
+            public static void EyeFadeFilterFix()
+            {
+                if (NewAspectRatio > 1.8 && UIFix.Value)
+                {
+                    var GameObjects = GameObject.FindObjectsOfType<Game.EyeFadeFilter>();
+                    foreach (var GameObject in GameObjects)
+                    {
+
+                        GameObject.transform.localScale = new Vector3(1 * AspectMultiplier, 1f, 1f);
+                    }
+                    // Log spam
+                    //MelonLogger.Msg("EyeFade filter spanned.");
                 }
             }
         }        
