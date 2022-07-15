@@ -29,5 +29,8 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>libs\UnityEngine.UI.stripped.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.VideoModule">
+      <HintPath>libs\UnityEngine.VideoModule.stripped.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

@@ -135,6 +135,15 @@ namespace AISomniumFiles2Mod
                     //MelonLogger.Msg("EyeFade filter spanned.");
                 }
             }
+
+            // Fix video aspect ratio
+            [HarmonyPatch(typeof(Game.VideoController), "Play")]
+            [HarmonyPostfix]
+            public static void FixVideoAspectRatio(Game.VideoController __instance)
+            {
+                __instance.videoPlayer.aspectRatio = UnityEngine.Video.VideoAspectRatio.FitVertically;
+                MelonLogger.Msg("Video aspect ratio set to FitVertically.");
+            }
         }
 
         [HarmonyPatch]
