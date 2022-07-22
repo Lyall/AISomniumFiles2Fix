@@ -66,7 +66,7 @@ namespace AISomniumFiles2Mod
             [HarmonyPostfix]
             public static void SetScreenMatchMode(CanvasScaler __instance)
             {
-                if (NewAspectRatio > 1.8 && UIFix.Value)
+                if (NewAspectRatio > NativeAspectRatio && UIFix.Value)
                 {
                     __instance.m_ScreenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
                 }  
@@ -77,7 +77,7 @@ namespace AISomniumFiles2Mod
             [HarmonyPostfix]
             public static void LetterboxFix()
             {
-                if (NewAspectRatio > 1.8 && UIFix.Value)
+                if (NewAspectRatio > NativeAspectRatio && UIFix.Value)
                 {
                     var GameObjects = GameObject.FindObjectsOfType<Game.CinemaScope>();
                     foreach (var GameObject in GameObjects)
@@ -102,7 +102,7 @@ namespace AISomniumFiles2Mod
             [HarmonyPostfix]
             public static void FilterFix()
             {
-                if (NewAspectRatio > 1.8 && UIFix.Value)
+                if (NewAspectRatio > NativeAspectRatio && UIFix.Value)
                 {
                     var GameObjects = GameObject.FindObjectsOfType<Game.FilterController>();
                     foreach (var GameObject in GameObjects)
@@ -123,7 +123,7 @@ namespace AISomniumFiles2Mod
             [HarmonyPostfix]
             public static void EyeFadeFilterFix()
             {
-                if (NewAspectRatio > 1.8 && UIFix.Value)
+                if (NewAspectRatio > NativeAspectRatio && UIFix.Value)
                 {
                     var GameObjects = GameObject.FindObjectsOfType<Game.EyeFadeFilter>();
                     foreach (var GameObject in GameObjects)
@@ -141,9 +141,12 @@ namespace AISomniumFiles2Mod
             [HarmonyPostfix]
             public static void FixVideoAspectRatio(Game.VideoController __instance)
             {
-                var cutsceneImage = __instance.world.Image;
-                cutsceneImage.transform.localScale = new Vector3(1 / AspectMultiplier, 1f, 1f);
-                MelonLogger.Msg("Cutscene viewport scaled horizontally.");
+                if (NewAspectRatio > NativeAspectRatio)
+                {
+                    var cutsceneImage = __instance.world.Image;
+                    cutsceneImage.transform.localScale = new Vector3(1 / AspectMultiplier, 1f, 1f);
+                    MelonLogger.Msg("Cutscene viewport scaled horizontally.");
+                }
             }
 
             // Reset cutscene viewport after video ends
@@ -151,9 +154,12 @@ namespace AISomniumFiles2Mod
             [HarmonyPostfix]
             public static void FixVideoAspectRatio2(Game.VideoController __instance)
             {
-                var cutsceneImage = __instance.world.Image;
-                cutsceneImage.transform.localScale = new Vector3(1f, 1f, 1f);
-                MelonLogger.Msg("Cutscene viewport scale reset to default.");
+                if (NewAspectRatio > NativeAspectRatio)
+                {
+                    var cutsceneImage = __instance.world.Image;
+                    cutsceneImage.transform.localScale = new Vector3(1f, 1f, 1f);
+                    MelonLogger.Msg("Cutscene viewport scale reset to default.");
+                }
             }
         }
 
