@@ -3,7 +3,7 @@ using HarmonyLib;
 using UnityEngine;
 using UnityEngine.UI;
 
-[assembly: MelonInfo(typeof(AISomniumFiles2Mod.AISomniumFiles2Fix), "AI: Somnium Files 2", "1.0.5", "Lyall")]
+[assembly: MelonInfo(typeof(AISomniumFiles2Mod.AISomniumFiles2Fix), "AI: Somnium Files 2", "1.0.6", "Lyall")]
 [assembly: MelonGame("SpikeChunsoft", "AI_TheSomniumFiles2")]
 namespace AISomniumFiles2Mod
 {
