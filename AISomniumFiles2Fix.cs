@@ -137,11 +137,12 @@ namespace AISomniumFiles2Mod
             }
 
             // Fix video aspect ratio
-            [HarmonyPatch(typeof(Game.VideoController), "Play")]
+            [HarmonyPatch(typeof(Game.VideoController), nameof(Game.VideoController.Play))]
             [HarmonyPostfix]
             public static void FixVideoAspectRatio(Game.VideoController __instance)
             {
-                __instance.videoPlayer.aspectRatio = UnityEngine.Video.VideoAspectRatio.FitVertically;
+                var cutsceneImage = __instance.world.Image;
+                cutsceneImage.transform.localScale = new Vector3(1 / AspectMultiplier, 1f, 1f);
                 MelonLogger.Msg("Video aspect ratio set to FitVertically.");
             }
         }
