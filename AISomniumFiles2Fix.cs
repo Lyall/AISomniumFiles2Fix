@@ -139,7 +139,7 @@ namespace AISomniumFiles2Mod
             // Scale cutscene viewport when video plays
             [HarmonyPatch(typeof(Game.VideoController), nameof(Game.VideoController.Prepare))]
             [HarmonyPostfix]
-            public static void FixVideoAspectRatio(Game.VideoController __instance)
+            public static void FixCutsceneViewport(Game.VideoController __instance)
             {
                 if (NewAspectRatio > NativeAspectRatio)
                 {
@@ -152,7 +152,7 @@ namespace AISomniumFiles2Mod
             // Reset cutscene viewport after video ends
             [HarmonyPatch(typeof(Game.VideoController), nameof(Game.VideoController.Stop))]
             [HarmonyPostfix]
-            public static void FixVideoAspectRatio2(Game.VideoController __instance)
+            public static void ResetCutsceneViewport(Game.VideoController __instance)
             {
                 if (NewAspectRatio > NativeAspectRatio)
                 {
