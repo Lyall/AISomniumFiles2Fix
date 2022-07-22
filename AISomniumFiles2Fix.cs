@@ -136,14 +136,24 @@ namespace AISomniumFiles2Mod
                 }
             }
 
-            // Fix video aspect ratio
-            [HarmonyPatch(typeof(Game.VideoController), nameof(Game.VideoController.Play))]
+            // Scale cutscene viewport when video plays
+            [HarmonyPatch(typeof(Game.VideoController), nameof(Game.VideoController.Prepare))]
             [HarmonyPostfix]
             public static void FixVideoAspectRatio(Game.VideoController __instance)
             {
                 var cutsceneImage = __instance.world.Image;
                 cutsceneImage.transform.localScale = new Vector3(1 / AspectMultiplier, 1f, 1f);
-                MelonLogger.Msg("Video aspect ratio set to FitVertically.");
+                MelonLogger.Msg("Cutscene viewport scaled horizontally.");
+            }
+
+            // Reset cutscene viewport after video ends
+            [HarmonyPatch(typeof(Game.VideoController), nameof(Game.VideoController.Stop))]
+            [HarmonyPostfix]
+            public static void FixVideoAspectRatio2(Game.VideoController __instance)
+            {
+                var cutsceneImage = __instance.world.Image;
+                cutsceneImage.transform.localScale = new Vector3(1f, 1f, 1f);
+                MelonLogger.Msg("Cutscene viewport scale reset to default.");
             }
         }
 
