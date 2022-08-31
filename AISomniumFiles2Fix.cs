@@ -15,6 +15,7 @@ namespace AISomniumFiles2Mod
         public static MelonPreferences_Entry<bool> Fullscreen;
         public static MelonPreferences_Entry<bool> UIFix;
         public static MelonPreferences_Entry<bool> IncreaseQuality;
+        public static MelonPreferences_Entry<bool> bDisableMouseCursor;
 
         public override void OnApplicationStart()
         {
@@ -27,6 +28,7 @@ namespace AISomniumFiles2Mod
             Fullscreen = Fixes.CreateEntry("Fullscreen", true, "", "Set to true for fullscreen or false for windowed");
             UIFix = Fixes.CreateEntry("UI_Fixes", true, "", "Fixes UI issues at ultrawide/wider");
             IncreaseQuality = Fixes.CreateEntry("IncreaseQuality", true, "", "Increase graphical quality."); // 
+            bDisableMouseCursor = Fixes.CreateEntry("DIsableMouseCursor", true, "", "Set to true to force the mouse cursor to be invisible.");
         }
 
         [HarmonyPatch]
@@ -45,12 +47,7 @@ namespace AISomniumFiles2Mod
                     Screen.SetResolution(DesiredResolutionX.Value, DesiredResolutionY.Value, FullScreenMode.FullScreenWindow);
                 }
 
-                MelonLogger.Msg($"Screen resolution set to {DesiredResolutionX.Value}x{DesiredResolutionY.Value}, Fullscreen = {Fullscreen.Value}");
-
-                // Set mouse cursor to invisible. Why is this not default?
-                Cursor.visible = false;
-                MelonLogger.Msg("Set cursor to invisible.");
-                
+                MelonLogger.Msg($"Screen resolution set to {DesiredResolutionX.Value}x{DesiredResolutionY.Value}, Fullscreen = {Fullscreen.Value}");                
             }
         }
 
@@ -177,6 +174,24 @@ namespace AISomniumFiles2Mod
                     UACD.antialiasing = UnityEngine.Rendering.Universal.AntialiasingMode.SubpixelMorphologicalAntiAliasing;
                     UACD.antialiasingQuality = UnityEngine.Rendering.Universal.AntialiasingQuality.High;
                     MelonLogger.Msg("Camera set to SMAA High.");
+                }
+            }
+        }
+
+        [HarmonyPatch]
+        public class CursorPatches
+        {
+            // Mouse cursor visibility
+            [HarmonyPatch(typeof(UnityEngine.Cursor), nameof(UnityEngine.Cursor.visible), MethodType.Setter)]
+            [HarmonyPrefix]
+            public static void CameraQualityFix(UnityEngine.Cursor __instance, ref bool __0)
+            {
+                if (bDisableMouseCursor.Value)
+                {
+                    __0 = false;
+                    // Log Spam
+                    // Seems to set cursor visibility a lot, :|
+                    //MelonLogger.Msg("Forced mouse cursor to be invisible.");
                 }
             }
         }
