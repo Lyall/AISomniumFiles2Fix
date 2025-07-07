@@ -1,3 +1,7 @@
+## ⚠️ This repository has been migrated
+Active development has moved to [Codeberg](https://codeberg.org/Lyall/AISomniumFiles2Fix).  
+This repo is archived and will no longer receive updates.
+
 # AI: THE SOMNIUM FILES - nirvanA Initiative Fix
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W01UAI9)</br>
 [![Github All Releases](https://img.shields.io/github/downloads/Lyall/AISomniumFiles2Fix/total.svg)]()
